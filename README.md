@@ -24,5 +24,13 @@ Consider an example document:
 
 To parse it, just instantiate a `NewsgroupParser` passing the path to the uncompressed tarball, and call the `parse()` method on the parser.
 After the files have been parsed, you can access them via `getArticles()`.
-This gives as key-value collection, with newsgroups labels as keys, and the lists of parsed articles as values.
+This gives a key-value collection, with newsgroups labels as keys, and the lists of parsed articles as values.
 Every article consists of the text and the key-value collection of headers.
+
+    NewsgroupParser parser = new NewsgroupParser("20_newsgroups");
+    parser.parse();
+
+    parser.getArticles().forEach((key, articles) -> {
+        System.out.println(key);
+        System.out.println(articles.size());
+    });
