@@ -1,6 +1,8 @@
 package com.wojtuch.models;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +11,18 @@ import java.util.Map;
  * Created by wojlukas on 5/20/16.
  */
 public class NewsgroupsArticle implements Serializable {
+    private static SimpleDateFormat[] dateFormats = new SimpleDateFormat[]{
+            new SimpleDateFormat("dd MMM yyyy HH:mm:ss z"),
+            new SimpleDateFormat("dd MMM yyyy HH:mm:ss"),
+            new SimpleDateFormat("dd MMM yyyy HH:mm z"),
+            new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z"),
+            new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss"),
+            new SimpleDateFormat("E, dd MMM yyyy HH:mm z"),
+            new SimpleDateFormat("E, dd MMM yy HH:mm:ss z")
+    };
     private Map<String, String> headers = new HashMap<>();
     private String rawText;
+    private Date date;
 
     public NewsgroupsArticle() {
     }
@@ -21,6 +33,30 @@ public class NewsgroupsArticle implements Serializable {
 
     public void setRawText(String rawText) {
         this.rawText = rawText;
+    }
+
+    public Date getDate() {
+        if (date == null) {
+            String dateString = headers.get("Date");
+            if (dateString != null) {
+                dateString = dateString.trim();
+                dateString = dateString.replaceFirst("UT$", "UTC");
+                date = tryToParseDate(dateString);
+            }
+        }
+        return date;
+    }
+
+    private Date tryToParseDate(String dateString) {
+        for (SimpleDateFormat dateFormat : dateFormats) {
+            try {
+                Date parsedDate = dateFormat.parse(dateString);
+                return parsedDate;
+            }
+            catch (ParseException e) {
+            }
+        }
+        throw new RuntimeException("Date format of " + dateString + " unknown!");
     }
 
     public Map<String, String> getHeaders() {

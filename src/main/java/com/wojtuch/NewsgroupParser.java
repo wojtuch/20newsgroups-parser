@@ -9,10 +9,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by wojlukas on 5/20/16.
@@ -24,8 +21,15 @@ public class NewsgroupParser {
         parser.parse();
 
         parser.getArticles().forEach((key, articles) -> {
-            System.out.println(key);
-            System.out.println(articles.size());
+            System.out.println(key+": "+articles.size());
+            articles.forEach(a -> {
+                Date d = a.getDate();
+                if (d == null) {
+                    System.out.println("\t"+a.getHeader("Subject"));
+                    System.out.println("\t"+a.getHeader("Message-ID"));
+                    System.out.println("\tNo date present.");
+                }
+            });
         });
     }
 
@@ -54,7 +58,7 @@ public class NewsgroupParser {
                     for (Path articleFile : articleFiles) {
                         try (BufferedReader br = new BufferedReader(new FileReader(articleFile.toString()))){
                             NewsgroupsArticle article = new NewsgroupsArticle();
-                            StringBuffer sb = new StringBuffer();
+                            StringBuffer content = new StringBuffer();
                             String line;
                             boolean inContent = false;
                             while ((line = br.readLine()) != null) {
@@ -71,11 +75,11 @@ public class NewsgroupParser {
 
                                 }
                                 else {
-                                    sb.append(line);
-                                    sb.append(" ");
+                                    content.append(line);
+                                    content.append(" ");
                                 }
                             }
-                            article.setRawText(sb.toString().trim());
+                            article.setRawText(content.toString().trim());
                             articles.get(newsgroups).add(article);
                         }
                     }
