@@ -40,6 +40,11 @@ public class NewsgroupsArticle implements Serializable {
             String dateString = headers.get("Date");
             if (dateString != null) {
                 dateString = dateString.trim();
+
+                /*
+                    some articles have the UT timezone format, which is not parsed by
+                    SimpleDateFormat, hence replacing it with UTC
+                 */
                 dateString = dateString.replaceFirst("UT$", "UTC");
                 date = tryToParseDate(dateString);
             }
