@@ -58,6 +58,7 @@ public class NewsgroupParser {
                     for (Path articleFile : articleFiles) {
                         try (BufferedReader br = new BufferedReader(new FileReader(articleFile.toString()))){
                             NewsgroupsArticle article = new NewsgroupsArticle();
+                            article.setLabel(newsgroups);
                             StringBuffer content = new StringBuffer();
                             String line;
                             boolean inContent = false;

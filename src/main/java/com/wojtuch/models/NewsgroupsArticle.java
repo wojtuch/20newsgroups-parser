@@ -22,6 +22,7 @@ public class NewsgroupsArticle implements Serializable {
     };
     private Map<String, String> headers = new HashMap<>();
     private String rawText;
+    private String label;
     private Date date;
 
     public NewsgroupsArticle() {
@@ -33,6 +34,14 @@ public class NewsgroupsArticle implements Serializable {
 
     public void setRawText(String rawText) {
         this.rawText = rawText;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public Date getDate() {
