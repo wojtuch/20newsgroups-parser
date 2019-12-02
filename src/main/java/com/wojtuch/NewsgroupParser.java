@@ -69,7 +69,7 @@ public class NewsgroupParser {
                                         continue;
                                     }
 
-                                    String[] split = line.split(": ");
+                                    String[] split = line.split(": ", 2);
                                     if (split.length == 2) {
                                         article.addHeader(split[0], split[1]);
                                     }
